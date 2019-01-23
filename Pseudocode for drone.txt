@@ -6,7 +6,7 @@ if(status = true) {
 	setMode active;
 	}
 else{
-	setmode standbyl
+	setmode standby;
 }
 
 //check if upright
