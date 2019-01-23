@@ -1,0 +1,43 @@
+puesdocode for drone
+
+//check if upright
+input upright;
+if(upright = false) {
+	moveTo upright;
+	upright = true;
+else{
+	while(upright) {
+		flying = yes;
+		}	
+	}	
+}
+
+//check if flying
+if(flying == yes){
+	camera = on;
+	}
+else{
+	if(upright == true){
+		flying = yes;
+		}
+	else{
+		moveTo upright;
+		flying = yes;
+		}
+	}
+
+//checks for failsafes
+//dead man switch
+//standby mode
+//system checks
+//check altimeter
+//check camera on tether
+
+//speed checks? ALTITUDE
+
+
+
+
+
+
+//pixhawk 4
