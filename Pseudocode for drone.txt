@@ -1,5 +1,14 @@
 puesdocode for drone
 
+//standby mode
+input status;
+if(status = true) {
+	setMode active;
+	}
+else{
+	setmode standbyl
+}
+
 //check if upright
 input upright;
 if(upright = false) {
@@ -28,7 +37,6 @@ else{
 
 //checks for failsafes
 //dead man switch
-//standby mode
 //system checks
 //check altimeter
 //check camera on tether
