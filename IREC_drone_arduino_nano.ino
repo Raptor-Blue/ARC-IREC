@@ -62,6 +62,7 @@ void flash(int);
 
 void setup() {
   // put your setup code here, to run once:
+  //call servoposition in setup (only open servo once)
   
   Serial.begin(9600); 
   servo1.attach(9);
@@ -72,6 +73,7 @@ void setup() {
   bmpSetup();
   MMA_Setup();
 
+  servoPosition();
 }
 
 void loop() {
@@ -304,6 +306,10 @@ void getMMAData()
 void servoPosition()
 {
   
+  //wait until info from pixhawk is received
+  //while loop checking for info
+  
+  servo1.write(180); //turn servo to pull arms down
 }
 
 //flash an led 3x
