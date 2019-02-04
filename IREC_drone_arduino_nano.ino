@@ -1,6 +1,6 @@
 #include <Adafruit_Sensor.h>
 #include <SimpleDHT.h>
-#include <Adafruit_BMP085.h>
+#include <Adafruit_BMP280.h>
 #include <Adafruit_MMA8451.h>
 #include <Servo.h>
 #include <Wire.h>
@@ -26,13 +26,13 @@ void sd_Setup();
 SimpleDHT11 dht11;
 void getDHTData();
 
-/* BMP180 - I2C connection
- *  3V: 3V 
+/* BMP280 - I2C connection
+ *  Vin: 5V 
  *  GND: GND
  *  SCL: pin A5
  *  SDA: pin A4
  */
-Adafruit_BMP085 bmp;
+Adafruit_BMP280 bmp;
 void bmpSetup();
 void getBMPData();
 
@@ -175,7 +175,7 @@ void getBMPData()
     dataFile.close(); //close the file 
     
     //Displaying data to serial port//
-    Serial.println("BMP180 Readings");
+    Serial.println("BMP280 Readings");
     Serial.print("Temperature: ");
     Serial.print(temp);
     Serial.println(" C");
