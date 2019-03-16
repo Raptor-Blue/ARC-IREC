@@ -1,6 +1,6 @@
 #include <Adafruit_Sensor.h>
 #include <SimpleDHT.h>
-#include <Adafruit_BMP280.h>
+#include <Adafruit_BMP085.h>
 #include <Adafruit_MMA8451.h>
 #include <Servo.h>
 #include <Wire.h>
@@ -32,7 +32,7 @@ void getDHTData();
  *  SCL: pin A5
  *  SDA: pin A4
  */
-Adafruit_BMP280 bmp;
+Adafruit_BMP085 bmp;
 void bmpSetup();
 void getBMPData();
 
@@ -82,7 +82,7 @@ void loop() {
   getBMPData();
   getDHTData();
   getMMAData();
-  
+  delay(1000);
 }
 
 //functions:
@@ -90,7 +90,7 @@ void loop() {
 void sd_Setup()
 {
   Serial.println("Initializing SD card...");
-  int CS = 10;
+  int CS = 53;
   
   if(!SD.begin(CS))
   {
@@ -158,7 +158,6 @@ void MMA_Setup()
 //get pressure/altitude/temp
 void getBMPData()
 {
-  
   float altitude, pressure, temp;
  
   temp = bmp.readTemperature();
@@ -171,7 +170,7 @@ void getBMPData()
   
   //writing to SD card//
   File dataFile = SD.open("data.txt", FILE_WRITE); // open file
-  if(dataFile)
+  if(dataFile) 
   {
     dataFile.print(dataString); //write temperature to SD card
     dataFile.close(); //close the file 
