@@ -11,13 +11,13 @@
 /* SD - SPI connection
  *  5V: 5V
  *  GND: GND
- *  CLK: pin 13
- *  DO: pin 12 (MISO)
- *  DI: pin 11 (MOSI)
- *  CS: pin 10
+ *  CLK: pin 52
+ *  DO: pin 50 (MISO)
+ *  DI: pin 51 (MOSI)
+ *  CS: pin 53
  */
 void sd_Setup();
- 
+
 /* DHT11
  *  VCC: 5V or 3V
  *  GND: GND
@@ -26,11 +26,11 @@ void sd_Setup();
 SimpleDHT11 dht11;
 void getDHTData();
 
-/* BMP280 - I2C connection
- *  Vin: 5V 
+/* BMP180 - I2C connection
+ *  Vin: 5V
  *  GND: GND
- *  SCL: pin A5
- *  SDA: pin A4
+ *  SCL: SCL
+ *  SDA: SDA
  */
 Adafruit_BMP085 bmp;
 void bmpSetup();
@@ -39,8 +39,8 @@ void getBMPData();
 /* MMA8451 - I2C connection
  *  Vin: 5V
  *  GND: GND
- *  SCL: pin A5
- *  SDA: pin A4
+ *  SCL: SCL
+ *  SDA: SDA
  */
  Adafruit_MMA8451 mma = Adafruit_MMA8451();
  void MMA_Setup();
@@ -57,14 +57,14 @@ void servoPosition();
  *  red - pin 6 (something failed)
  */
 int ledG =5;
-int ledR = 6; 
+int ledR = 6;
 void flash(int);
 
 void setup() {
   // put your setup code here, to run once:
   //call servoposition in setup (only open servo once)
-  
-  Serial.begin(9600); 
+
+  Serial.begin(9600);
   servo1.attach(9);
   pinMode(5, OUTPUT);
   pinMode(6, OUTPUT);
@@ -91,7 +91,7 @@ void sd_Setup()
 {
   Serial.println("Initializing SD card...");
   int CS = 53;
-  
+
   if(!SD.begin(CS))
   {
     Serial.println("Card failed, or not present.");
@@ -99,13 +99,13 @@ void sd_Setup()
     {
       flash(ledR);
     }
-  }  
-  
+  }
+
   Serial.println("Card is Ready");
   flash(ledG);
-  
+
   //Add headers to data file
-  File dataFile = SD.open("data.txt", FILE_WRITE); 
+  File dataFile = SD.open("data.txt", FILE_WRITE);
   if(dataFile)
   {
     dataFile.print("Time(s), BMP_Temperature(C), BMP_Pressure(Pa), BMP_Altitude(m), ");
@@ -116,9 +116,9 @@ void sd_Setup()
   }
   else
   {
-    Serial.println("Couldn't open data file");  
+    Serial.println("Couldn't open data file");
   }
-  
+
 }
 
 //setup bmp
@@ -132,7 +132,7 @@ void bmpSetup()
       flash(ledR);
     }
   }
-  
+
   Serial.println("BMP initialized.");
   flash(ledG);
 }
@@ -149,7 +149,7 @@ void MMA_Setup()
       flash(ledR);
     }
   }
-  
+
   mma.setRange(MMA8451_RANGE_2_G);
   Serial.println("MMA8451 initialized.");
   flash(ledG);
@@ -159,22 +159,22 @@ void MMA_Setup()
 void getBMPData()
 {
   float altitude, pressure, temp;
- 
+
   temp = bmp.readTemperature();
   pressure = bmp.readPressure();
   altitude = bmp.readAltitude(101500);
-  
+
   // create data string to store to sd card
-  String dataString = String(temp) + "," + String(pressure) + "," + String(altitude);  
-   
-  
+  String dataString = String(temp) + "," + String(pressure) + "," + String(altitude);
+
+
   //writing to SD card//
   File dataFile = SD.open("data.txt", FILE_WRITE); // open file
-  if(dataFile) 
+  if(dataFile)
   {
     dataFile.print(dataString); //write temperature to SD card
-    dataFile.close(); //close the file 
-    
+    dataFile.close(); //close the file
+
     //Displaying data to serial port//
     Serial.println("BMP280 Readings");
     Serial.print("Temperature: ");
@@ -190,9 +190,9 @@ void getBMPData()
   }
   else
   {
-    Serial.println("Couldn't open data file");  
+    Serial.println("Couldn't open data file");
   }
-   
+
 }
 
 //get temp/humidity
@@ -216,11 +216,11 @@ void getDHTData()
     //display results
     dataFile.print(dataString);
     dataFile.close();
-    
+
     Serial.println("DHT Readings: ");
     Serial.print("Temperature: "); Serial.print((int)temperature); Serial.println(" C");
     Serial.print("Humidity: "); Serial.print((int)humidity); Serial.println(" %");
-  
+
     Serial.println("");
   }
 
@@ -232,9 +232,9 @@ void getDHTData()
 //detect motion, tilt and basic orientation
 void getMMAData()
 {
-  
-  //Get a new sensor event  
-  sensors_event_t event; 
+
+  //Get a new sensor event
+  sensors_event_t event;
   mma.getEvent(&event);
 
   float x = 0, y = 0, z = 0;
@@ -252,45 +252,45 @@ void getMMAData()
   /* Get the orientation of the sensor */
   uint8_t o = mma.getOrientation();
   String Orient;
-  
+
   switch (o)
   {
-    case MMA8451_PL_PUF: 
+    case MMA8451_PL_PUF:
       Serial.println("Portrait Up Front");
       Orient = "Portrait Up Front";
       break;
-    case MMA8451_PL_PUB: 
+    case MMA8451_PL_PUB:
       Serial.println("Portrait Up Back");
       Orient = "Portrait Up Back";
-      break;    
-    case MMA8451_PL_PDF: 
+      break;
+    case MMA8451_PL_PDF:
       Serial.println("Portrait Down Front");
       Orient = "Portrait Down Front";
       break;
-    case MMA8451_PL_PDB: 
+    case MMA8451_PL_PDB:
       Serial.println("Portrait Down Back");
       Orient = "Portrait Down Back";
       break;
-    case MMA8451_PL_LRF: 
+    case MMA8451_PL_LRF:
       Serial.println("Landscape Right Front");
       Orient = "Landscape Right Front";
       break;
-    case MMA8451_PL_LRB: 
+    case MMA8451_PL_LRB:
       Serial.println("Landscape Right Back");
       Orient = "Landscape Right Back";
       break;
-    case MMA8451_PL_LLF: 
+    case MMA8451_PL_LLF:
       Serial.println("Landscape Left Front");
       Orient = "Landscape Left Front";
       break;
-    case MMA8451_PL_LLB: 
+    case MMA8451_PL_LLB:
       Serial.println("Landscape Left Back");
       Orient = "Landscape Left Back";
       break;
     }
-  
+
   String dataString = String(x) + "," + String(y) + "," + String(z) + "," + Orient;
- 
+
   //print to sd card
   File dataFile = SD.open("data.txt", FILE_WRITE);
   if(dataFile)
@@ -298,16 +298,16 @@ void getMMAData()
     dataFile.println(dataString);
     dataFile.close();
   }
-  
+
 }
 
 //write servo/servos to position to expand arms
 void servoPosition()
 {
-  
+
   //wait until info from pixhawk is received
   //while loop checking for info
-  
+
   servo1.write(180); //turn servo to pull arms down
 }
 
