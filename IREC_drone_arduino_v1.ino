@@ -60,6 +60,8 @@ int ledG =5;
 int ledR = 6;
 void flash(int);
 
+unsigned long prev_Millis = 0;
+
 void setup() {
   // put your setup code here, to run once:
   //call servoposition in setup (only open servo once)
@@ -78,7 +80,25 @@ void setup() {
 
 void loop() {
   // put your main code here, to run repeatedly:
-
+ 
+  unsigned long currentMillis = millis(); // variable holds amount of time program has been running
+  int Time = currentMillis * 0.001; // gives time in seconds
+  if((currentMillis-prev_Millis >= 1000)) // checks to see if one second has passed since the last loop
+  {
+    prev_Millis = currentMillis;
+    Serial.print("Time = "); //record time on serial monitor
+    Serial.print(Time);
+    Serial.println("");
+    
+    File dataFile = SD.open("data.txt", FILE_WRITE);
+    if(dataFile)
+    {
+      dataFile.print(Time);
+      dataFile.print(",");
+      dataFile.close();
+    }
+  }
+ 
   getBMPData();
   getDHTData();
   getMMAData();
