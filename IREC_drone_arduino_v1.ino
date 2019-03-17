@@ -19,9 +19,9 @@
 void sd_Setup();
 
 /* DHT11
- *  VCC: 5V or 3V
+ *  VCC: 5V 
  *  GND: GND
- *  DATA: 2
+ *  DATA: Digitial Pin 2
  */
 SimpleDHT11 dht11;
 void getDHTData();
@@ -47,16 +47,16 @@ void getBMPData();
  void getMMAData();
 
 /* Servo
- *  Signal: pin 9 (or any pwm)
+ *  Signal: Digital Pin 9 (or any pwm)
  */
 Servo servo1;
 void servoPosition();
 
 /* LEDs
- *  green - pin 5 (things are working)
- *  red - pin 6 (something failed)
+ *  green - Digital Pin 5 (things are working)
+ *  red - Digital Pin 6 (something failed)
  */
-int ledG =5;
+int ledG = 5;
 int ledR = 6;
 void flash(int);
 
