@@ -221,34 +221,39 @@ void getDHTData()
   int DHTpin = 2;
   byte temperature = 0;
   byte humidity = 0;
-
-  if(dht11.read(DHTpin, &temperature, &humidity, NULL))
-  {
-    Serial.println("Read DHT11 failed.");
-    return;
-  }
-
-  String dataString = "," + String(temperature) + "," + String(humidity) + ",";
-
+  int Null = 00;
+  //DHT sampling rate is 1 Hz
+  
   File dataFile = SD.open("data.txt", FILE_WRITE);
   if(dataFile)
   {
     //display results
-    dataFile.print(dataString);
-    dataFile.close();
+    if(dht11.read(DHTpin, &temperature, &humidity, NULL))
+    {
+      String dataString = "," + String(Null) + "," + String(Null) + ",";
+      dataFile.print(dataString);
+      dataFile.close();
 
-    Serial.println("DHT Readings: ");
-    Serial.print("Temperature: "); Serial.print((int)temperature); Serial.println(" C");
-    Serial.print("Humidity: "); Serial.print((int)humidity); Serial.println(" %");
-
-    Serial.println("");
+      Serial.println("DHT Readings: ");
+      Serial.print("Temperature: "); Serial.print("NULL"); Serial.println(" C");
+      Serial.print("Humidity: "); Serial.print("NULL"); Serial.println(" %");
+  
+      Serial.println("");
+    }
+    else
+    {
+      String dataString = "," + String(temperature) + "," + String(humidity) + ",";
+      dataFile.print(dataString);
+      dataFile.close();
+    
+      Serial.println("DHT Readings: ");
+      Serial.print("Temperature: "); Serial.print((int)temperature); Serial.println(" C");
+      Serial.print("Humidity: "); Serial.print((int)humidity); Serial.println(" %");
+  
+      Serial.println("");
+    }
   }
-
-
-  //DHT sampling rate is 1 Hz
-  //delay(1000);
 }
-
 //detect motion, tilt and basic orientation
 void getMMAData()
 {
